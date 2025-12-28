@@ -1,0 +1,343 @@
+package TicTacToe;
+import java.util.Scanner;
+
+public class TicTacToe {
+	
+	static Scanner console = new Scanner(System.in);
+	static boolean won = false;
+	static String whoWon;
+	
+	static int[][] board;
+
+	public static void main(String[] args) {
+
+		while (true) {
+			System.out.println("1- User VS User");
+			System.out.println("2- Computer VS User");
+			System.out.println("3- Exit");
+			System.out.print("Choose an option: ");
+			int choice = console.nextInt();
+			if (choice == 3) break;
+			else if (choice == 1) userVSuser();
+			else if (choice == 2) compVSuser();
+			else System.out.println("Invalid option!");
+		}
+		
+		console.close();
+		
+	}
+	
+	public static void resetGame() {
+        board = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        won = false;
+        whoWon = null;
+    }
+	
+	public static void compVSuser() {
+		resetGame();
+		boolean compFirst = false;
+		
+		while (true) {
+			System.out.print("Do you wanna start (Y/N)? ");
+			char YorN = console.next().toLowerCase().charAt(0);
+			if (YorN == 'y') {
+				compFirst = false;
+				break;
+			} else if (YorN == 'n') {
+				compFirst = true;
+				break;
+			} else System.out.println("Invalid Input!");
+		}
+		
+		while (won == false) {
+			
+			drawCheck();
+			if (won == true) break;
+			if (compFirst == true) {
+				boolean emptyCell = false;
+				do {
+					int rand = (int)(1 + 9 * Math.random());
+					switch (rand) {
+					case 1:
+						if (board[0][0] != 10 && board[0][0] != 11) {
+							board[0][0] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 2:
+						if (board[0][1] != 10 && board[0][1] != 11) {
+							board[0][1] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 3:
+						if (board[0][2] != 10 && board[0][2] != 11) {
+							board[0][2] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 4:
+						if (board[1][0] != 10 && board[1][0] != 11) {
+							board[1][0] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 5:
+						if (board[1][1] != 10 && board[1][1] != 11) {
+							board[1][1] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 6:
+						if (board[1][2] != 10 && board[1][2] != 11) {
+							board[1][2] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 7:
+						if (board[2][0] != 10 && board[2][0] != 11) {
+							board[2][0] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 8:
+						if (board[2][1] != 10 && board[2][1] != 11) {
+							board[2][1] = 10;
+							emptyCell = true;
+						}
+						break;
+					case 9:
+						if (board[2][2] != 10 && board[2][2] != 11) {
+							board[2][2] = 10;
+							emptyCell = true;
+						}
+						break;
+					}
+				} while (emptyCell == false);
+			} else if (compFirst == false) {
+				printBoard();
+				choice();
+				printBoard();
+			}
+			check();
+			compFirst = !compFirst;
+		}
+		
+		printBoard();
+		System.out.println(whoWon);
+	}
+	
+	public static void printBoard() {
+			System.out.println("-----");
+			for (int i = 0; i <= 2; i++) {
+				for (int j = 0; j <= 2; j++) {
+					if (board[i][j] == 10) System.out.print("X "); // if x
+					else if (board[i][j] == 11) System.out.print("O "); // if o
+					else System.out.print(board[i][j] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println("-----");
+	}
+	
+	public static void drawCheck() {
+		int count = 0;
+		for (int i = 0; i <= 2; i++) {
+			for (int j = 0; j <= 2; j++) {
+				if (board[i][j] == 10 || board[i][j] == 11) count++; // if x or o
+			}
+		}
+		
+		if (count == 9) {
+			won = true;
+			whoWon = "Draw!";
+		}
+	}
+	
+	public static void check() {
+		// 8 possibilities (3 rows, 3 columns, 2 crosses)
+		// rows
+		if (board[0][0] == board[0][1] && board[0][0] == board [0][2]) whoWon(0,0); // 1
+		if (board[1][0] == board[1][1] && board[1][0] == board [1][2]) whoWon(1,0); // 2
+		if (board[2][0] == board[2][1] && board[2][0] == board [2][2]) whoWon(2,0); // 3
+		
+		// columns
+		if (board[0][0] == board[1][0] && board[0][0] == board [2][0]) whoWon(0,0); // 1
+		if (board[0][1] == board[1][1] && board[0][1] == board [2][1]) whoWon(0,1); // 2
+		if (board[0][2] == board[1][2] && board[0][2] == board [2][2]) whoWon(0,2); // 3
+		
+		// crosses
+		if (board[0][0] == board[1][1] && board[0][0] == board [2][2]) whoWon(0,0); // 1
+		if (board[0][2] == board[1][1] && board[0][2] == board [2][0]) whoWon(0,2); // 2
+	}
+	
+	public static void whoWon (int row, int column) {
+		won = true;
+		if (board[row][column] == 10) whoWon = "X won!";
+		else if (board[row][column] == 11) whoWon = "O won!";
+	}
+	
+	public static void choice() {
+
+		
+			boolean emptyCell = false;
+			int choice;
+			do {
+				System.out.print("Chose a cell to put O: ");
+				choice = console.nextInt();
+				
+				switch (choice) {
+				case 1:
+					if (board[0][0] == 1) emptyCell = true;
+					break;
+				case 2:
+					if (board[0][1] == 2) emptyCell = true;
+					break;
+				case 3:
+					if (board[0][2] == 3) emptyCell = true;
+					break;
+				case 4:
+					if (board[1][0] == 4) emptyCell = true;
+					break;
+				case 5:
+					if (board[1][1] == 5) emptyCell = true;
+					break;
+				case 6:
+					if (board[1][2] == 6) emptyCell = true;
+					break;
+				case 7:
+					if (board[2][0] == 7) emptyCell = true;
+					break;
+				case 8:
+					if (board[2][1] == 8) emptyCell = true;
+					break;
+				case 9:
+					if (board[2][2] == 9) emptyCell = true;
+					break;
+				}
+			} while (emptyCell == false);
+			
+			int n = 11; // O but Im lazy to put it to all cases
+			
+			switch (choice) {
+			case 1:
+				board[0][0] = n;
+				break;
+			case 2:
+				board[0][1] = n;
+				break;
+			case 3:
+				board[0][2] = n;
+				break;
+			case 4:
+				board[1][0] = n;
+				break;
+			case 5:
+				board[1][1] = n;
+				break;
+			case 6:
+				board[1][2] = n;
+				break;
+			case 7:
+				board[2][0] = n;
+				break;
+			case 8:
+				board[2][1] = n;
+				break;
+			case 9:
+				board[2][2] = n;
+				break;
+			}
+
+}
+	public static void userVSuser() {
+		resetGame();
+		while (won == false) {
+			drawCheck();
+			if (won == true) break;
+			printBoard();
+			choiceUser();
+			check();
+		}
+		
+		printBoard();
+		System.out.println(whoWon);
+	}
+	
+	public static void choiceUser() {
+		boolean emptyCell = false;
+		int choice;
+		do {
+			System.out.print("Chose a cell: ");
+			choice = console.nextInt();
+			
+			switch (choice) {
+			case 1:
+				if (board[0][0] == 1) emptyCell = true;
+				break;
+			case 2:
+				if (board[0][1] == 2) emptyCell = true;
+				break;
+			case 3:
+				if (board[0][2] == 3) emptyCell = true;
+				break;
+			case 4:
+				if (board[1][0] == 4) emptyCell = true;
+				break;
+			case 5:
+				if (board[1][1] == 5) emptyCell = true;
+				break;
+			case 6:
+				if (board[1][2] == 6) emptyCell = true;
+				break;
+			case 7:
+				if (board[2][0] == 7) emptyCell = true;
+				break;
+			case 8:
+				if (board[2][1] == 8) emptyCell = true;
+				break;
+			case 9:
+				if (board[2][2] == 9) emptyCell = true;
+				break;
+			}
+		} while (emptyCell == false);
+		
+		System.out.print("Enter X or O: ");
+		char xo = console.next().toLowerCase().charAt(0);
+		int n = 10;
+		if (xo == 'x') n = 10;
+		else if (xo == 'o') n = 11;
+		
+		switch (choice) {
+		case 1:
+			board[0][0] = n;
+			break;
+		case 2:
+			board[0][1] = n;
+			break;
+		case 3:
+			board[0][2] = n;
+			break;
+		case 4:
+			board[1][0] = n;
+			break;
+		case 5:
+			board[1][1] = n;
+			break;
+		case 6:
+			board[1][2] = n;
+			break;
+		case 7:
+			board[2][0] = n;
+			break;
+		case 8:
+			board[2][1] = n;
+			break;
+		case 9:
+			board[2][2] = n;
+			break;
+		}
+	
+	
+}
+}
